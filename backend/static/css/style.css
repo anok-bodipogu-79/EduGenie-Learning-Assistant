@@ -359,6 +359,133 @@ header {
     box-shadow: 0 0 10px rgba(143, 51, 255, 0.3);
 }
 
+
+/* --- LEARNING HISTORY (LEFT PANEL) --- */
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+/* Thinner scrollbar for history panel */
+.history-list::-webkit-scrollbar {
+    width: 4px;
+}
+.history-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+.history-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+.history-list::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-primary);
+}
+
+.history-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-left: 3px solid transparent;
+    transition: var(--transition-smooth);
+}
+
+.history-item:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.08);
+    transform: translateX(4px);
+}
+
+/* Specific hover backgrounds and borders based on item type */
+.history-item.qa:hover, .history-item.qa.active {
+    border-left-color: var(--accent-primary);
+    background: rgba(143, 51, 255, 0.05);
+}
+.history-item.explain:hover, .history-item.explain.active {
+    border-left-color: #eab308;
+    background: rgba(234, 179, 8, 0.05);
+}
+.history-item.quiz:hover, .history-item.quiz.active {
+    border-left-color: var(--accent-secondary);
+    background: rgba(59, 130, 246, 0.05);
+}
+.history-item.summarize:hover, .history-item.summarize.active {
+    border-left-color: #ec4899;
+    background: rgba(236, 72, 153, 0.05);
+}
+.history-item.learn:hover, .history-item.learn.active {
+    border-left-color: var(--accent-cyan);
+    background: rgba(6, 182, 212, 0.05);
+}
+
+/* History Item Icon Wrapper */
+.history-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+    transition: var(--transition-smooth);
+}
+
+.history-item.qa .history-icon-wrapper {
+    background: rgba(143, 51, 255, 0.1);
+    border: 1px solid rgba(143, 51, 255, 0.2);
+}
+.history-item.explain .history-icon-wrapper {
+    background: rgba(234, 179, 8, 0.1);
+    border: 1px solid rgba(234, 179, 8, 0.2);
+}
+.history-item.quiz .history-icon-wrapper {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+.history-item.summarize .history-icon-wrapper {
+    background: rgba(236, 72, 153, 0.1);
+    border: 1px solid rgba(236, 72, 153, 0.2);
+}
+.history-item.learn .history-icon-wrapper {
+    background: rgba(6, 182, 212, 0.1);
+    border: 1px solid rgba(6, 182, 212, 0.2);
+}
+
+/* Text layouts */
+.history-item-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex-grow: 1;
+}
+
+.history-item-title {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    font-family: 'Outfit', sans-serif;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.4;
+}
+
+.history-item-meta {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    line-height: 1.3;
+    margin-top: 0.15rem;
+}
+
 /* --- WORKSPACE (RIGHT PANEL) --- */
 .workspace-card {
     padding: 2.5rem;

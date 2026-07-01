@@ -433,6 +433,53 @@ function setupAuthModals() {
     });
 }
 
+// Formats YYYY-MM-DD HH:MM:SS string to a clean relative or compact time string
+function formatHistoryDate(dateStr) {
+    try {
+        if (!dateStr) return "";
+        const parts = dateStr.split(" ");
+        if (parts.length < 2) return dateStr;
+        
+        const datePart = parts[0]; // YYYY-MM-DD
+        const timePart = parts[1]; // HH:MM:SS
+        
+        const dateParts = datePart.split("-");
+        const timeParts = timePart.split(":");
+        
+        // Parse into a Date object as UTC
+        const dateObj = new Date(Date.UTC(
+            parseInt(dateParts[0]),
+            parseInt(dateParts[1]) - 1,
+            parseInt(dateParts[2]),
+            parseInt(timeParts[0]),
+            parseInt(timeParts[1]),
+            parseInt(timeParts[2])
+        ));
+        
+        const now = new Date();
+        const diffMs = now - dateObj;
+        const diffMins = Math.floor(diffMs / 60000);
+        
+        if (diffMins < 1) return "Just now";
+        if (diffMins < 60) return `${diffMins}m ago`;
+        
+        const diffHours = Math.floor(diffMins / 60);
+        const isToday = dateObj.getFullYear() === now.getFullYear() && 
+                        dateObj.getMonth() === now.getMonth() && 
+                        dateObj.getDate() === now.getDate();
+                        
+        if (diffHours < 24 && isToday) {
+            return `Today, ${dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+        }
+        
+        return dateObj.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ", " + 
+               dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } catch (e) {
+        console.error("Error formatting date", e);
+        return dateStr;
+    }
+}
+
 // Fetch and render past queries and responses for the current user
 async function fetchAndRenderHistory() {
     if (!currentUser) {
@@ -454,18 +501,10 @@ async function fetchAndRenderHistory() {
         
         historyData.forEach(item => {
             const itemCard = document.createElement("div");
-            itemCard.className = "task-card glass-card";
-            itemCard.style.padding = "0.75rem 1rem";
-            itemCard.style.cursor = "pointer";
-            itemCard.style.gap = "0.75rem";
-            itemCard.style.border = "1px solid rgba(255, 255, 255, 0.04)";
+            itemCard.className = `history-item ${item.QueryType}`;
             
             const iconSpan = document.createElement("div");
-            iconSpan.className = "task-icon";
-            iconSpan.style.width = "32px";
-            iconSpan.style.height = "32px";
-            iconSpan.style.fontSize = "0.95rem";
-            iconSpan.style.borderRadius = "8px";
+            iconSpan.className = "history-icon-wrapper";
             
             let emoji = "💬";
             let typeLabel = "Q&A";
@@ -478,23 +517,26 @@ async function fetchAndRenderHistory() {
             itemCard.appendChild(iconSpan);
             
             const infoDiv = document.createElement("div");
-            infoDiv.className = "task-card-info";
+            infoDiv.className = "history-item-info";
             
             const promptTitle = document.createElement("span");
-            promptTitle.className = "task-card-name";
-            promptTitle.style.fontSize = "0.85rem";
-            promptTitle.textContent = item.QueryText.length > 25 ? item.QueryText.substring(0, 22) + "..." : item.QueryText;
+            promptTitle.className = "history-item-title";
+            promptTitle.textContent = item.QueryText;
+            promptTitle.title = item.QueryText; // Show full text on tooltip hover
             
             const dateSpan = document.createElement("span");
-            dateSpan.className = "task-card-desc";
-            dateSpan.style.fontSize = "0.7rem";
-            dateSpan.textContent = typeLabel + " • " + item.CreatedAt;
+            dateSpan.className = "history-item-meta";
+            dateSpan.textContent = `${typeLabel} • ${formatHistoryDate(item.CreatedAt)}`;
             
             infoDiv.appendChild(promptTitle);
             infoDiv.appendChild(dateSpan);
             itemCard.appendChild(infoDiv);
             
             itemCard.addEventListener("click", () => {
+                // Remove active class from all history items, add to this one
+                document.querySelectorAll(".history-item").forEach(el => el.classList.remove("active"));
+                itemCard.classList.add("active");
+
                 // Click corresponding left task panel card
                 const taskCardToActivate = document.querySelector(`.task-card[data-task="${item.QueryType}"]`);
                 if (taskCardToActivate) {
