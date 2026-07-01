@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, ConfigDict
 from datetime import datetime
 from typing import List, Optional
 
@@ -18,8 +18,7 @@ class UserResponse(UserBase):
     UserID: int
     CreatedAt: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # --- Query & Response Schemas ---
 class QueryCreate(BaseModel):
@@ -33,8 +32,7 @@ class QueryResponse(BaseModel):
     QueryText: str
     CreatedAt: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class AIResponseSchema(BaseModel):
     ResponseID: int
@@ -43,8 +41,7 @@ class AIResponseSchema(BaseModel):
     ModelUsed: str
     CreatedAt: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # --- Q&A API Schemas ---
 class QARequest(BaseModel):

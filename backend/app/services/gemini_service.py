@@ -61,19 +61,34 @@ class GeminiService:
         """
         mock_quiz = [
             {
-                "question": f"What is a primary concept of {topic}?",
-                "options": ["A basic building block", "An advanced structural layout", "A system error handler", "None of the above"],
-                "correct_answer": "A basic building block"
+                "question": f"Which of the following is a primary characteristic of {topic}?",
+                "options": [
+                    "It forms the foundational basis of the subject.",
+                    "It is an advanced application used only in industry.",
+                    "It has been deprecated in modern study modules.",
+                    "None of the above"
+                ],
+                "correct_answer": "It forms the foundational basis of the subject."
             },
             {
-                "question": f"Which of the following is commonly associated with {topic}?",
-                "options": ["Compiler validation", "Data structures and logic", "Cloud computing resources", "All of the above"],
-                "correct_answer": "All of the above"
+                "question": f"Why is the study of {topic} considered important in this academic field?",
+                "options": [
+                    "To build a comprehensive theoretical understanding.",
+                    "To memorize facts without practical use.",
+                    "It is historically irrelevant but required for exams.",
+                    "All of the above"
+                ],
+                "correct_answer": "To build a comprehensive theoretical understanding."
             },
             {
-                "question": f"Why do we study {topic} in computer science?",
-                "options": ["To build complex systems", "To write cleaner code", "To improve algorithm design", "All of the above"],
-                "correct_answer": "All of the above"
+                "question": f"Which approach is most effective when first learning {topic}?",
+                "options": [
+                    "Mastering core principles step-by-step.",
+                    "Skipping basic definitions and starting with complex tasks.",
+                    "Relying entirely on rote memorization.",
+                    "All of the above"
+                ],
+                "correct_answer": "Mastering core principles step-by-step."
             }
         ]
 
