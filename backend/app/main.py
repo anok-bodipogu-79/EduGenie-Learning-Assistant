@@ -5,7 +5,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database.database import engine, Base
-from app.routers import auth, qna, explanation, quiz, summary, learning_path
+from app.routers import auth, qna, explanation, quiz, summary, learning_path, analytics
 
 # Create SQLite database tables if they do not exist
 Base.metadata.create_all(bind=engine)
@@ -16,14 +16,7 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Add CORS Middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Removed CORS Middleware: Application is a monolith, so CORS is unnecessary and insecure if misconfigured.
 
 # Directories resolving
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -49,6 +42,7 @@ app.include_router(explanation.router)
 app.include_router(quiz.router)
 app.include_router(summary.router)
 app.include_router(learning_path.router)
+app.include_router(analytics.router)
 
 @app.get("/")
 def get_home_page(request: Request):
