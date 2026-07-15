@@ -20,11 +20,11 @@ class LaMiniService:
         
         try:
             print(f"Loading local HuggingFace LaMini model: {self.model_name}...")
-            # Lazy imports to prevent crashing if packages aren't installed yet
+                                                                               
             import torch
             from transformers import pipeline
             
-            # Use GPU if available
+                                  
             device = 0 if torch.cuda.is_available() else -1
             print(f"LaMini running on device: {'GPU' if device == 0 else 'CPU'}")
             
@@ -66,7 +66,7 @@ class LaMiniService:
                 )
             
             try:
-                # Use google-genai Client fallback with the EXPLAIN_SYSTEM_PROMPT
+                                                                                 
                 from google.genai import types
                 response = gemini_service.client.models.generate_content(
                     model="gemini-2.5-flash",
@@ -87,7 +87,7 @@ class LaMiniService:
                 )
 
         try:
-            # Construct a clear prompt for the local instruction-following model
+                                                                                
             prompt = f"Explain the educational topic '{topic}' in simple terms for a student."
             res = self.pipeline(prompt)
             return res[0]['generated_text']
@@ -99,5 +99,5 @@ class LaMiniService:
             except Exception:
                 return f"Error occurred during generation: {e}"
 
-# Instantiate singleton
+                       
 lamini_service = LaMiniService()

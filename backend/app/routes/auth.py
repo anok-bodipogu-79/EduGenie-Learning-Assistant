@@ -75,7 +75,7 @@ def register(user_data: UserCreate, response: Response, db: Session = Depends(ge
         max_age=86400 * 30, 
         path="/",
         httponly=True,
-        secure=True,     # Should be True in production (Render handles HTTPS)
+        secure=True,                                                          
         samesite="lax"
     )
     return user
@@ -151,33 +151,33 @@ def get_paginated_history(
     """
     from app.database.models import UserQuery
     
-    # Base query for the current user
+                                     
     query = db.query(UserQuery).filter(UserQuery.UserID == current_user.UserID)
     
-    # Search
+            
     if search:
         query = query.filter(UserQuery.QueryText.ilike(f"%{search}%"))
         
-    # Feature filter
+                    
     if feature_type != "all":
         query = query.filter(UserQuery.QueryType == feature_type)
         
-    # Sort
+          
     if sort == "desc":
         query = query.order_by(UserQuery.CreatedAt.desc())
     else:
         query = query.order_by(UserQuery.CreatedAt.asc())
         
-    # Count total for pagination
+                                
     total = query.count()
     total_pages = (total + limit - 1) // limit if limit > 0 else 0
     
-    # Safe limits
+                 
     if page < 1: page = 1
     if limit < 1: limit = 10
     if limit > 100: limit = 100
     
-    # Pagination
+                
     offset = (page - 1) * limit
     queries = query.offset(offset).limit(limit).all()
     

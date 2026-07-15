@@ -2,7 +2,7 @@ from pydantic import BaseModel, EmailStr, Field, ConfigDict
 from datetime import datetime
 from typing import List, Optional
 
-# --- User Schemas ---
+                      
 class UserBase(BaseModel):
     UserName: str = Field(..., min_length=2, max_length=50)
     Email: EmailStr
@@ -20,7 +20,7 @@ class UserResponse(UserBase):
 
     model_config = ConfigDict(from_attributes=True)
 
-# --- Query & Response Schemas ---
+                                  
 class QueryCreate(BaseModel):
     QueryType: str
     QueryText: str
@@ -43,21 +43,21 @@ class AIResponseSchema(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
-# --- Q&A API Schemas ---
+                         
 class QARequest(BaseModel):
     question: str = Field(..., min_length=1, max_length=1000)
 
 class QAResponse(BaseModel):
     answer: str
 
-# --- Explanation API Schemas ---
+                                 
 class ExplainRequest(BaseModel):
     topic: str = Field(..., min_length=1, max_length=200)
 
 class ExplainResponse(BaseModel):
     explanation: str
 
-# --- Quiz API Schemas ---
+                          
 class QuizRequest(BaseModel):
     topic: str = Field(..., min_length=1, max_length=200)
 
@@ -69,26 +69,26 @@ class QuizQuestionSchema(BaseModel):
 class QuizResponse(BaseModel):
     quiz: List[QuizQuestionSchema]
 
-# --- Summary API Schemas ---
+                             
 class SummaryRequest(BaseModel):
     text: str = Field(..., min_length=1, max_length=5000)
 
 class SummaryResponse(BaseModel):
     summary: str
 
-# --- Learning Path API Schemas ---
+                                   
 class LearningPathRequest(BaseModel):
     topic: str = Field(..., min_length=1, max_length=200)
 
 class LearningPathStep(BaseModel):
-    level: str # 'Beginner', 'Intermediate', 'Advanced'
+    level: str                                         
     topics: List[str]
 
 class LearningPathResponse(BaseModel):
     topic: str
     roadmap: List[LearningPathStep]
 
-# --- Dashboard Analytics Schemas ---
+                                     
 class DashboardStatistics(BaseModel):
     questions: Optional[int] = None
     quizzes: Optional[int] = None
@@ -104,7 +104,7 @@ class DashboardRecentActivityItem(BaseModel):
 
 class DashboardStreak(BaseModel):
     current_streak: int
-    weekly_activity: List[dict] # list of {"date": "YYYY-MM-DD", "active": bool}
+    weekly_activity: List[dict]                                                 
 
 class DashboardContinueLearning(BaseModel):
     title: str
@@ -114,11 +114,11 @@ class DashboardResponse(BaseModel):
     statistics: DashboardStatistics
     recent_activity: List[DashboardRecentActivityItem]
     learning_streak: DashboardStreak
-    calendar_activity: List[str] # list of "YYYY-MM-DD"
+    calendar_activity: List[str]                       
     continue_learning: Optional[DashboardContinueLearning] = None
     progress: Optional[dict] = None
 
-# --- History Pagination & Detail Schemas ---
+                                             
 class HistoryPagination(BaseModel):
     page: int
     limit: int

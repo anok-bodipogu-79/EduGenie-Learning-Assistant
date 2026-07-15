@@ -7,8 +7,8 @@ from datetime import datetime, timedelta
 from app.main import app
 from app.database.database import Base, get_db
 
-# Test DB Setup
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test_history.db"
+               
+SQLALCHEMY_DATABASE_URL = "sqlite:///./data/test_history.db"
 engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
@@ -33,11 +33,11 @@ def client():
 
 @pytest.fixture(scope="module")
 def user_tokens(client):
-    # User 1
+            
     client.post("/auth/register", json={"UserName": "User1", "Email": "user1@example.com", "Password": "password123"})
     resp1 = client.post("/auth/login", json={"Email": "user1@example.com", "Password": "password123"})
     
-    # User 2
+            
     client.post("/auth/register", json={"UserName": "User2", "Email": "user2@example.com", "Password": "password123"})
     resp2 = client.post("/auth/login", json={"Email": "user2@example.com", "Password": "password123"})
     
@@ -60,15 +60,15 @@ def test_user_isolation_and_pagination(client: TestClient, user_tokens):
     h1 = {"Cookie": f"user_id={t1}"}
     h2 = {"Cookie": f"user_id={t2}"}
     
-    # User 1 creates 12 activities
+                                  
     for i in range(12):
         client.post("/qa", json={"question": f"Q1_{i}"}, headers=h1)
         
-    # User 2 creates 3 activities
+                                 
     for i in range(3):
         client.post("/explain", json={"topic": f"T2_{i}"}, headers=h2)
         
-    # Check User 1 pagination
+                             
     res1_p1 = client.get("/auth/history/paginated?page=1&limit=10", headers=h1).json()
     assert len(res1_p1["items"]) == 10
     assert res1_p1["pagination"]["total"] == 12
@@ -79,7 +79,7 @@ def test_user_isolation_and_pagination(client: TestClient, user_tokens):
     assert len(res1_p2["items"]) == 2
     assert res1_p2["pagination"]["has_next"] is False
     
-    # Check User 2 isolation
+                            
     res2 = client.get("/auth/history/paginated", headers=h2).json()
     assert res2["pagination"]["total"] == 3
     assert all(item["QueryType"] == "explain" for item in res2["items"])
@@ -100,14 +100,14 @@ def test_detail_endpoint(client: TestClient, user_tokens):
     h1 = {"Cookie": f"user_id={t1}"}
     h2 = {"Cookie": f"user_id={t2}"}
     
-    # Get an item from User 1
+                             
     res1 = client.get("/auth/history/paginated", headers=h1).json()
     q_id = res1["items"][0]["QueryID"]
     
-    # User 1 can access
+                       
     detail = client.get(f"/auth/history/{q_id}", headers=h1)
     assert detail.status_code == 200
     
-    # User 2 cannot access
+                          
     detail2 = client.get(f"/auth/history/{q_id}", headers=h2)
     assert detail2.status_code == 403

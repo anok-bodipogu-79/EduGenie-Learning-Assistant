@@ -4,7 +4,7 @@ from typing import List
 from app.database.database import get_db
 from app.database.models import User
 from app.database.schemas import QuizRequest, QuizQuestionSchema
-from app.routers.auth import get_current_user
+from app.routes.auth import get_current_user
 from app.services.quiz_service import quiz_service
 
 router = APIRouter(tags=["Quiz"])

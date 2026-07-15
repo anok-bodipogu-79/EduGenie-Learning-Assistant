@@ -11,7 +11,7 @@ from app.utils.json_cleaner import clean_json_response
 
 class GeminiService:
     def __init__(self):
-        # We use gemini-2.5-flash as default in the new SDK
+                                                           
         self.model_name = "gemini-2.5-flash"
         self.has_key = bool(settings.GEMINI_API_KEY and settings.GEMINI_API_KEY != "YOUR_GEMINI_API_KEY_HERE")
         self.client = None
@@ -148,5 +148,5 @@ class GeminiService:
             fallback_roadmap[0]["topics"] = [f"⚠️ [Quota Exceeded - Showing Mock Roadmap]"] + fallback_roadmap[0]["topics"]
             return fallback_roadmap
 
-# Instantiate singleton
+                       
 gemini_service = GeminiService()

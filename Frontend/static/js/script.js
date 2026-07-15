@@ -1,14 +1,14 @@
-// ============================================================
-// EDUGENIE — Frontend Application Logic
-// All API communication, rendering, auth, and state managed here.
-// ============================================================
 
-// Global State
+
+
+
+
+
 let activeTask = "qa";
 let activeEndpoint = "/qa";
 let currentUser = null;
 
-// DOM Elements
+
 const taskCards      = document.querySelectorAll(".task-card");
 const inputLabel     = document.getElementById("input-label");
 const inputField     = document.getElementById("query-input");
@@ -18,14 +18,14 @@ const outputBox      = document.getElementById("output-box");
 const modelBadge     = document.getElementById("model-badge");
 const historyList    = document.getElementById("history-list");
 
-// Auth Elements
+
 const userBadge     = document.getElementById("user-badge");
 const btnLoginNav   = document.getElementById("btn-login-nav");
 const btnLogoutNav  = document.getElementById("btn-logout-nav");
 const loginModal    = document.getElementById("login-modal");
 const registerModal = document.getElementById("register-modal");
 
-// Task configuration — all features use Gemini
+
 const taskConfigs = {
     qa: {
         label: "Your Question",
@@ -37,7 +37,7 @@ const taskConfigs = {
         label: "Concept to Explain",
         placeholder: "Enter a topic to explain (e.g., 'Recursion', 'Photosynthesis', 'World War I', 'SQL Joins')",
         endpoint: "/explain",
-        model: "Gemini"   // Fixed: was incorrectly showing "LaMini-Flan-T5"
+        model: "Gemini"   
     },
     quiz: {
         label: "Quiz Topic",
@@ -59,9 +59,9 @@ const taskConfigs = {
     }
 };
 
-// ============================================================
-// MARKDOWN RENDERING — marked.js + DOMPurify (replaces formatMarkdown)
-// ============================================================
+
+
+
 function safeRenderMarkdown(text) {
     if (!text) return "";
     const rawHtml = marked.parse(String(text));
@@ -78,9 +78,9 @@ function safeRenderMarkdown(text) {
     });
 }
 
-// ============================================================
-// SVG ICON HELPER — Lucide icons for history items
-// ============================================================
+
+
+
 function getHistoryIcon(queryType) {
     const icons = {
         qa: `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>`,
@@ -92,25 +92,25 @@ function getHistoryIcon(queryType) {
     return icons[queryType] || icons.qa;
 }
 
-// SVG icon used in submit button (Sparkles — AI action)
+
 const SVG_ARROW_UP = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.88 5.47L20 10l-5.47 1.88L12 17.94l-1.88-5.47L4 10l5.47-1.88L12 3z"/><path d="M19 19l1 2 1-2 2-1-2-1-1-2-1 2-2 1 2 1z"/><path d="M4 4l.5 1 .5-1 1-.5-1-.5L5 2l-.5 1L3 3.5l1 .5z"/></svg>`;
 
-// ============================================================
-// INITIALIZATION
-// ============================================================
+
+
+
 document.addEventListener("DOMContentLoaded", () => {
     checkCurrentUser();
     setupTaskSelectors();
     setupAuthModals();
 });
 
-// ============================================================
-// TASK SELECTOR
-// ============================================================
+
+
+
 function setupTaskSelectors() {
     taskCards.forEach(card => {
         card.addEventListener("click", () => {
-            // Remove active from all, set on clicked
+            
             taskCards.forEach(c => {
                 c.classList.remove("active");
                 c.setAttribute("aria-pressed", "false");
@@ -118,7 +118,7 @@ function setupTaskSelectors() {
             card.classList.add("active");
             card.setAttribute("aria-pressed", "true");
 
-            // Update task state
+            
             activeTask = card.dataset.task;
             const config = taskConfigs[activeTask];
 
@@ -127,12 +127,12 @@ function setupTaskSelectors() {
             inputField.placeholder = config.placeholder;
             modelBadge.textContent = config.model;
 
-            // Clear input & output
+            
             inputField.value      = "";
             outputBox.innerHTML   = '<div class="output-placeholder">Your response will appear here.</div>';
         });
 
-        // Keyboard accessibility: activate on Enter/Space
+        
         card.addEventListener("keydown", (e) => {
             if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
@@ -142,9 +142,9 @@ function setupTaskSelectors() {
     });
 }
 
-// ============================================================
-// AUTHENTICATION CHECK
-// ============================================================
+
+
+
 async function checkCurrentUser() {
     try {
         const response = await fetch("/auth/me");
@@ -160,12 +160,12 @@ async function checkCurrentUser() {
     }
 }
 
-// ============================================================
-// UI AUTH STATE UPDATE
-// ============================================================
+
+
+
 function updateUIForAuth(isLoggedIn) {
     if (isLoggedIn && currentUser) {
-        // Update user badge name
+        
         const userNameEl = userBadge.querySelector(".user-name");
         if (userNameEl) {
             userNameEl.textContent = currentUser.UserName;
@@ -191,11 +191,11 @@ function updateUIForAuth(isLoggedIn) {
     }
 }
 
-// ============================================================
-// SUBMIT HANDLER
-// ============================================================
+
+
+
 btnSubmit.addEventListener("click", async () => {
-    // Require authentication
+    
     if (!currentUser) {
         loginModal.style.display = "flex";
         return;
@@ -207,7 +207,7 @@ btnSubmit.addEventListener("click", async () => {
         return;
     }
 
-    // Build payload based on active task
+    
     let payload = {};
     if (activeTask === "qa")         payload = { question: textValue };
     else if (activeTask === "explain")    payload = { topic: textValue };
@@ -215,7 +215,7 @@ btnSubmit.addEventListener("click", async () => {
     else if (activeTask === "summarize")  payload = { text: textValue };
     else if (activeTask === "learn")      payload = { topic: textValue };
 
-    // Show loading state
+    
     loadingWrapper.style.display = "flex";
     outputBox.style.display      = "none";
     btnSubmit.disabled           = true;
@@ -249,9 +249,9 @@ btnSubmit.addEventListener("click", async () => {
     }
 });
 
-// ============================================================
-// RENDER RESULT (dispatches by task type)
-// ============================================================
+
+
+
 function renderResult(data) {
     outputBox.innerHTML = "";
 
@@ -268,9 +268,9 @@ function renderResult(data) {
     }
 }
 
-// ============================================================
-// QUIZ RENDERER
-// ============================================================
+
+
+
 function renderQuiz(questions) {
     const quizWrapper = document.createElement("div");
     quizWrapper.className = "quiz-wrapper";
@@ -295,18 +295,18 @@ function renderQuiz(questions) {
             optBtn.setAttribute("aria-label", `Option: ${opt}`);
 
             optBtn.addEventListener("click", () => {
-                // Disable all options for this question
+                
                 const siblings = optsList.querySelectorAll(".quiz-option");
                 siblings.forEach(btn => btn.disabled = true);
 
-                // Highlight correct / incorrect
+                
                 if (opt === q.correct_answer) {
                     optBtn.classList.add("correct");
                     optBtn.setAttribute("aria-label", `Correct: ${opt}`);
                 } else {
                     optBtn.classList.add("incorrect");
                     optBtn.setAttribute("aria-label", `Incorrect: ${opt}`);
-                    // Reveal the correct option
+                    
                     siblings.forEach(btn => {
                         if (btn.textContent === q.correct_answer) {
                             btn.classList.add("correct");
@@ -326,9 +326,9 @@ function renderQuiz(questions) {
     outputBox.appendChild(quizWrapper);
 }
 
-// ============================================================
-// LEARNING ROADMAP RENDERER
-// ============================================================
+
+
+
 function renderLearningPath(data) {
     const timeline = document.createElement("div");
     timeline.className = "timeline";
@@ -388,14 +388,14 @@ function renderLearningPath(data) {
     outputBox.appendChild(timeline);
 }
 
-// ============================================================
-// AUTH MODALS SETUP
-// ============================================================
+
+
+
 function setupAuthModals() {
     const showModal = (modal) => {
         modal.style.display = "flex";
         modal.setAttribute("aria-hidden", "false");
-        // Focus first input for accessibility
+        
         const firstInput = modal.querySelector("input");
         if (firstInput) setTimeout(() => firstInput.focus(), 100);
     };
@@ -410,27 +410,27 @@ function setupAuthModals() {
         hideModal(registerModal);
     };
 
-    // Nav sign-in button
+    
     btnLoginNav.addEventListener("click", () => showModal(loginModal));
 
-    // Close buttons
+    
     document.querySelectorAll(".modal-close").forEach(btn => {
         btn.addEventListener("click", hideAllModals);
     });
 
-    // Click outside modal to close
+    
     [loginModal, registerModal].forEach(modal => {
         modal.addEventListener("click", (e) => {
             if (e.target === modal) hideAllModals();
         });
     });
 
-    // ESC key to close
+    
     document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") hideAllModals();
     });
 
-    // Switch between login and register
+    
     document.getElementById("link-goto-register").addEventListener("click", (e) => {
         e.preventDefault();
         hideModal(loginModal);
@@ -443,7 +443,7 @@ function setupAuthModals() {
         showModal(loginModal);
     });
 
-    // Register form submission
+    
     document.getElementById("form-register").addEventListener("submit", async (e) => {
         e.preventDefault();
         const username = document.getElementById("reg-username").value.trim();
@@ -469,7 +469,7 @@ function setupAuthModals() {
         }
     });
 
-    // Login form submission
+    
     document.getElementById("form-login").addEventListener("submit", async (e) => {
         e.preventDefault();
         const email    = document.getElementById("login-email").value.trim();
@@ -494,7 +494,7 @@ function setupAuthModals() {
         }
     });
 
-    // Logout
+    
     btnLogoutNav.addEventListener("click", async () => {
         try {
             await fetch("/auth/logout", { method: "POST" });
@@ -507,9 +507,9 @@ function setupAuthModals() {
     });
 }
 
-// ============================================================
-// DATE FORMATTING UTILITY
-// ============================================================
+
+
+
 function formatHistoryDate(dateStr) {
     try {
         if (!dateStr) return "";
@@ -552,9 +552,9 @@ function formatHistoryDate(dateStr) {
     }
 }
 
-// ============================================================
-// HISTORY FETCH AND RENDER
-// ============================================================
+
+
+
 async function fetchAndRenderHistory() {
     if (!currentUser) {
         historyList.innerHTML = '<div class="output-placeholder">Sign in to view history.</div>';
@@ -581,14 +581,14 @@ async function fetchAndRenderHistory() {
             itemCard.setAttribute("tabindex", "0");
             itemCard.setAttribute("aria-label", `${item.QueryType}: ${item.QueryText}`);
 
-            // Icon
+            
             const iconSpan = document.createElement("div");
             iconSpan.className = "history-icon-wrapper";
             iconSpan.innerHTML = getHistoryIcon(item.QueryType);
             iconSpan.setAttribute("aria-hidden", "true");
             itemCard.appendChild(iconSpan);
 
-            // Info
+            
             const infoDiv = document.createElement("div");
             infoDiv.className = "history-item-info";
 
@@ -611,22 +611,22 @@ async function fetchAndRenderHistory() {
             infoDiv.appendChild(dateSpan);
             itemCard.appendChild(infoDiv);
 
-            // Click handler — restore the query and result
+            
             const activateItem = () => {
-                // Clear active state from all history items
+                
                 document.querySelectorAll(".history-item").forEach(el => el.classList.remove("active"));
                 itemCard.classList.add("active");
 
-                // Click the matching task card to switch the tool
+                
                 const taskCardToActivate = document.querySelector(`.task-card[data-task="${item.QueryType}"]`);
                 if (taskCardToActivate) taskCardToActivate.click();
 
-                // Restore input
+                
                 inputField.value       = item.QueryText;
                 modelBadge.textContent = item.ModelUsed;
                 outputBox.innerHTML    = "";
 
-                // Restore output
+                
                 if (["qa", "explain", "summarize"].includes(item.QueryType)) {
                     outputBox.innerHTML = `<div class="rendered-markdown">${safeRenderMarkdown(item.ResponseText)}</div>`;
                 } else if (item.QueryType === "quiz") {

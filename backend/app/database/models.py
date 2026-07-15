@@ -12,7 +12,7 @@ class User(Base):
     PasswordHash = Column(String, nullable=False)
     CreatedAt = Column(DateTime, default=datetime.utcnow)
 
-    # Relationships
+                   
     queries = relationship("UserQuery", back_populates="user", cascade="all, delete-orphan")
 
 class UserQuery(Base):
@@ -20,11 +20,11 @@ class UserQuery(Base):
 
     QueryID = Column(Integer, primary_key=True, index=True, autoincrement=True)
     UserID = Column(Integer, ForeignKey("users.UserID"), nullable=False)
-    QueryType = Column(String, nullable=False) # 'qa', 'explain', 'quiz', 'summarize', 'learn'
+    QueryType = Column(String, nullable=False)                                                
     QueryText = Column(Text, nullable=False)
     CreatedAt = Column(DateTime, default=datetime.utcnow)
 
-    # Relationships
+                   
     user = relationship("User", back_populates="queries")
     ai_response = relationship("AIResponse", back_populates="query", uselist=False, cascade="all, delete-orphan")
     learning_paths = relationship("LearningPath", back_populates="query", cascade="all, delete-orphan")
@@ -37,10 +37,10 @@ class AIResponse(Base):
     ResponseID = Column(Integer, primary_key=True, index=True, autoincrement=True)
     QueryID = Column(Integer, ForeignKey("user_queries.QueryID"), nullable=False)
     ResponseText = Column(Text, nullable=False)
-    ModelUsed = Column(String, nullable=False) # 'Gemini' or 'LaMini-Flan-T5'
+    ModelUsed = Column(String, nullable=False)                               
     CreatedAt = Column(DateTime, default=datetime.utcnow)
 
-    # Relationships
+                   
     query = relationship("UserQuery", back_populates="ai_response")
 
 class LearningPath(Base):
@@ -49,11 +49,11 @@ class LearningPath(Base):
     PathID = Column(Integer, primary_key=True, index=True, autoincrement=True)
     QueryID = Column(Integer, ForeignKey("user_queries.QueryID"), nullable=False)
     Topic = Column(String, nullable=False)
-    Level = Column(String, nullable=False) # 'Beginner', 'Intermediate', 'Advanced'
-    RecommendedTopics = Column(Text, nullable=False) # Stored as JSON/text representation of list
+    Level = Column(String, nullable=False)                                         
+    RecommendedTopics = Column(Text, nullable=False)                                             
     CreatedAt = Column(DateTime, default=datetime.utcnow)
 
-    # Relationships
+                   
     query = relationship("UserQuery", back_populates="learning_paths")
 
 class Quiz(Base):
@@ -66,10 +66,10 @@ class Quiz(Base):
     OptionB = Column(String, nullable=False)
     OptionC = Column(String, nullable=False)
     OptionD = Column(String, nullable=False)
-    CorrectOption = Column(String, nullable=False) # 'A', 'B', 'C', or 'D'
+    CorrectOption = Column(String, nullable=False)                        
     CreatedAt = Column(DateTime, default=datetime.utcnow)
 
-    # Relationships
+                   
     query = relationship("UserQuery", back_populates="quizzes")
 
 class Summary(Base):
@@ -82,5 +82,5 @@ class Summary(Base):
     ModelUsed = Column(String, default="Gemini", nullable=False)
     CreatedAt = Column(DateTime, default=datetime.utcnow)
 
-    # Relationships
+                   
     query = relationship("UserQuery", back_populates="summaries")

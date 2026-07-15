@@ -9,7 +9,7 @@ class LearningService:
         Generates a 3-level learning path for a topic, logs the query and response to the DB,
         saves records to the LearningPath table, and returns the roadmap list.
         """
-        # 1. Save User Query
+                            
         query = UserQuery(
             UserID=user_id,
             QueryType="learn",
@@ -19,10 +19,10 @@ class LearningService:
         db.commit()
         db.refresh(query)
         
-        # 2. Call Gemini
+                        
         roadmap = gemini_service.generate_learning_path(topic)
         
-        # 3. Save AI Response
+                             
         model_used = "Gemini" if gemini_service.has_key else "Mock Engine"
         ai_resp = AIResponse(
             QueryID=query.QueryID,
@@ -31,7 +31,7 @@ class LearningService:
         )
         db.add(ai_resp)
         
-        # 4. Save LearningPath records
+                                      
         for stage in roadmap:
             path_record = LearningPath(
                 QueryID=query.QueryID,

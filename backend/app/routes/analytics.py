@@ -6,7 +6,7 @@ from datetime import datetime, timedelta, date
 from app.database.database import get_db
 from app.database.models import User, UserQuery, LearningPath
 from app.database.schemas import DashboardResponse, DashboardStatistics, DashboardRecentActivityItem, DashboardStreak, DashboardContinueLearning
-from app.routers.auth import get_current_user
+from app.routes.auth import get_current_user
 
 router = APIRouter(
     prefix="/dashboard",
@@ -28,7 +28,7 @@ def get_dashboard_analytics(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    # 1. Statistics
+                   
     questions_count = db.query(func.count(UserQuery.QueryID)).filter(
         UserQuery.UserID == current_user.UserID,
         UserQuery.QueryType == 'qa'
@@ -48,10 +48,10 @@ def get_dashboard_analytics(
         questions=questions_count or 0,
         quizzes=quizzes_count or 0,
         concepts=concepts_count or 0,
-        learning_activities=None # Study hours not available
+        learning_activities=None                            
     )
 
-    # 2. Recent Activity
+                        
     recent_queries = db.query(UserQuery).filter(
         UserQuery.UserID == current_user.UserID
     ).order_by(desc(UserQuery.CreatedAt)).limit(5).all()
@@ -68,21 +68,21 @@ def get_dashboard_analytics(
             )
         )
 
-    # 3. Learning Streak & Weekly Activity
-    # Extract just the date part of CreatedAt
-    # This handles both Postgres and SQLite reasonably well by avoiding DB-specific date functions
+                                          
+                                             
+                                                                                                  
     all_dates_query = db.query(UserQuery.CreatedAt).filter(
         UserQuery.UserID == current_user.UserID
     ).order_by(desc(UserQuery.CreatedAt)).all()
 
-    # Parse in Python to guarantee cross-db compatibility
+                                                         
     activity_dates = []
     for (created_at,) in all_dates_query:
         if isinstance(created_at, str):
             try:
                 parsed_date = datetime.fromisoformat(created_at).date()
             except ValueError:
-                # Fallback for SQLite strings like '2026-07-12 02:45:00'
+                                                                        
                 parsed_date = datetime.strptime(created_at.split(".")[0], "%Y-%m-%d %H:%M:%S").date()
         else:
             parsed_date = created_at.date()
@@ -90,7 +90,7 @@ def get_dashboard_analytics(
         if not activity_dates or activity_dates[-1] != parsed_date:
             activity_dates.append(parsed_date)
 
-    # Calculate streak
+                      
     today = datetime.utcnow().date()
     yesterday = today - timedelta(days=1)
     
@@ -107,7 +107,7 @@ def get_dashboard_analytics(
             check_date = yesterday - timedelta(days=1)
         else:
             current_streak = 0
-            idx = -1 # Stop
+            idx = -1       
             
         if current_streak > 0:
             for d in activity_dates[idx:]:
@@ -117,7 +117,7 @@ def get_dashboard_analytics(
                 else:
                     break
 
-    # Calculate weekly activity (Mon to Sun of current week)
+                                                            
     weekly_activity = []
     monday = today - timedelta(days=today.weekday())
     for i in range(7):
@@ -133,10 +133,10 @@ def get_dashboard_analytics(
         weekly_activity=weekly_activity
     )
 
-    # 4. Study Calendar
+                       
     calendar_activity = [d.strftime("%Y-%m-%d") for d in activity_dates]
 
-    # 5. Continue Learning
+                          
     latest_path_query = db.query(UserQuery).join(LearningPath, UserQuery.QueryID == LearningPath.QueryID).filter(
         UserQuery.UserID == current_user.UserID,
         UserQuery.QueryType == 'learn'
@@ -150,7 +150,7 @@ def get_dashboard_analytics(
             description=f"Level: {lp.Level}"
         )
 
-    # 6. Overall Progress (Unavailable)
+                                       
     progress = None
 
     return DashboardResponse(

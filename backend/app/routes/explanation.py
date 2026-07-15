@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app.database.database import get_db
 from app.database.models import User, UserQuery, AIResponse
 from app.database.schemas import ExplainRequest, ExplainResponse
-from app.routers.auth import get_current_user
+from app.routes.auth import get_current_user
 from app.services.lamini_service import lamini_service
 
 router = APIRouter(tags=["Explanation"])
@@ -17,7 +17,7 @@ def explain_topic(
     """
     Endpoint for topic explanation. Uses LaMini-Flan-T5 (with Gemini fallback). Logs history to DB.
     """
-    # 1. Save User Query
+                        
     query = UserQuery(
         UserID=current_user.UserID,
         QueryType="explain",
@@ -27,10 +27,10 @@ def explain_topic(
     db.commit()
     db.refresh(query)
 
-    # 2. Get Explanation
+                        
     explanation = lamini_service.explain_topic(payload.topic)
 
-    # 3. Save AI Response
+                         
     model_used = "LaMini-Flan-T5" if lamini_service.is_loaded else "Gemini"
     if not lamini_service.is_loaded and lamini_service.fallback_active:
         from app.services.gemini_service import gemini_service

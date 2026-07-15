@@ -9,7 +9,7 @@ class QuizService:
         Generates a 3-question MCQ quiz on a topic, logs the query and response to the DB,
         saves each question to the Quiz table, and returns the list of questions.
         """
-        # 1. Save User Query
+                            
         query = UserQuery(
             UserID=user_id,
             QueryType="quiz",
@@ -19,10 +19,10 @@ class QuizService:
         db.commit()
         db.refresh(query)
         
-        # 2. Call Gemini
+                        
         questions = gemini_service.generate_quiz(topic)
         
-        # 3. Save AI Response
+                             
         model_used = "Gemini" if gemini_service.has_key else "Mock Engine"
         ai_resp = AIResponse(
             QueryID=query.QueryID,
@@ -31,7 +31,7 @@ class QuizService:
         )
         db.add(ai_resp)
         
-        # 4. Save Quiz records
+                              
         for q in questions:
             opts = q.get("options", [])
             while len(opts) < 4:

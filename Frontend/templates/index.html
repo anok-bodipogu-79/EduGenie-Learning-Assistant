@@ -8,20 +8,20 @@
     <title>EduGenie — AI Learning Assistant</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
     <link rel="stylesheet" href="/static/css/style.css">
-    <!-- Markdown renderer -->
+    
     <script src="https://cdn.jsdelivr.net/npm/marked@9.1.6/marked.min.js"></script>
-    <!-- HTML sanitizer -->
+    
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js"></script>
 </head>
 
 <body>
 
-    <!-- Aurora Background Orbs -->
+    
     <div class="aurora-orb aurora-orb-1" aria-hidden="true"></div>
     <div class="aurora-orb aurora-orb-2" aria-hidden="true"></div>
     <div class="aurora-orb aurora-orb-3" aria-hidden="true"></div>
 
-    <!-- Navigation -->
+    
     <header>
         <nav class="navbar container">
             <div class="logo" onclick="window.location.reload()" role="link" tabindex="0" aria-label="EduGenie home">
@@ -49,17 +49,17 @@
         </nav>
     </header>
 
-    <!-- Page Content -->
+    
     <main class="container page-content">
 
-        <!-- Greeting -->
+        
         <section class="greeting">
             <div class="greeting-eyebrow">Welcome to EduGenie</div>
             <h1 class="greeting-headline">Learn something new <span>today.</span></h1>
             <p class="greeting-sub">Ask. Understand. Practice. Grow.</p>
         </section>
 
-        <!-- Bento Tool Selector -->
+        
         <section class="bento-tools" aria-label="AI Tools">
 
             <div class="task-card active" data-task="qa" role="button" tabindex="0" aria-pressed="true" aria-label="Ask AI">
@@ -114,10 +114,10 @@
 
         </section>
 
-        <!-- AI Workspace -->
+        
         <section class="workspace-card glass-card" aria-label="AI Workspace">
 
-            <!-- Composer -->
+            
             <div class="workspace-composer">
                 <label id="input-label" class="input-label" for="query-input">Your Question</label>
                 <textarea
@@ -136,7 +136,7 @@
                 </div>
             </div>
 
-            <!-- Response Section -->
+            
             <div class="results-container">
                 <div class="results-header">
                     <div class="results-header-left">
@@ -145,7 +145,7 @@
                     </div>
                 </div>
 
-                <!-- Loading State -->
+                
                 <div id="loading-wrapper" class="loading-wrapper" aria-live="polite" aria-label="Loading AI response">
                     <div class="loading-dots" aria-hidden="true">
                         <span></span>
@@ -155,7 +155,7 @@
                     <span class="loading-text">Thinking...</span>
                 </div>
 
-                <!-- Output -->
+                
                 <div id="output-box" class="output-box" aria-live="polite">
                     <div class="output-placeholder">Your response will appear here.</div>
                 </div>
@@ -163,7 +163,7 @@
 
         </section>
 
-        <!-- Learning History -->
+        
         <section class="history-section glass-card" aria-label="Recent Learning History">
             <div class="history-header">
                 <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polyline points="12,6 12,12 16,14"></polyline></svg>
@@ -176,14 +176,14 @@
 
     </main>
 
-    <!-- Footer -->
+    
     <footer>
         <div class="container">
             <p class="footer-text">© 2026 EduGenie</p>
         </div>
     </footer>
 
-    <!-- Login Modal -->
+    
     <div id="login-modal" class="modal-overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="login-title">
         <div class="modal-content">
             <button class="modal-close" aria-label="Close modal">
@@ -218,7 +218,7 @@
         </div>
     </div>
 
-    <!-- Register Modal -->
+    
     <div id="register-modal" class="modal-overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="register-title">
         <div class="modal-content">
             <button class="modal-close" aria-label="Close modal">

@@ -8,7 +8,7 @@ class SummaryService:
         Summarizes input text using Gemini, logs the query and response to the DB,
         saves record to the Summary table, and returns the summary text.
         """
-        # 1. Save User Query
+                            
         query = UserQuery(
             UserID=user_id,
             QueryType="summarize",
@@ -18,10 +18,10 @@ class SummaryService:
         db.commit()
         db.refresh(query)
         
-        # 2. Call Gemini
+                        
         summary_text = gemini_service.summarize_text(text)
         
-        # 3. Save AI Response
+                             
         model_used = "Gemini" if gemini_service.has_key else "Mock Engine"
         ai_resp = AIResponse(
             QueryID=query.QueryID,
@@ -30,7 +30,7 @@ class SummaryService:
         )
         db.add(ai_resp)
         
-        # 4. Save Summary Record
+                                
         summary_record = Summary(
             QueryID=query.QueryID,
             OriginalText=text,

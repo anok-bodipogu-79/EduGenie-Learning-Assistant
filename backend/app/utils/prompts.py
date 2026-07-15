@@ -1,4 +1,4 @@
-# System prompt configurations for AI models
+                                            
 
 QNA_SYSTEM_PROMPT = """
 You are an expert, friendly educational assistant.
